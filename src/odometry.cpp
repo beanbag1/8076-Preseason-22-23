@@ -42,11 +42,11 @@ void odom(void * ignore) {
     double changeLeft = (currLeft - prevLeft)*inchesperdeg; //both are alr converted to inches
     double changeRight = (currRight - prevRight)*inchesperdeg;
     position.theta = (lastTheta + (currLeft - currRight)*inchesperdeg/sTotal); //converts radians to degrees
-    if (position.theta > 2*pi) {
+    if (position.theta >= (2*pi)) {
       position.theta = position.theta - 2*pi;
-    } else if (position.theta < 2*pi) {
+    } else if (position.theta <= 0) {
       position.theta = position.theta + 2*pi;
-    } else break;
+    }
     double changeTheta = position.theta - prevTheta;
     double sumofChange = changeLeft + changeRight;
     if (changeTheta == 0) { //if changeTheta = 0 -> robot is forward or back purely

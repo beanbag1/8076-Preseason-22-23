@@ -12,9 +12,6 @@ using namespace std;
 //declare base stuff
 auto trackerL = ADIEncoder('C', 'D', true);
 auto trackerR = ADIEncoder('A', 'B', true);
-MotorGroup bleft({-16, -20});
-MotorGroup bright({17, 19});
-MotorGroup drive({17, -16, 19, -20});
 
 //define FIXED values
 #define sL 7.75
@@ -44,7 +41,7 @@ void odom(void * ignore) {
     currRight = trackerR.get();
     double changeLeft = (currLeft - prevLeft)*inchesperdeg; //both are alr converted to inches
     double changeRight = (currRight - prevRight)*inchesperdeg;
-    position.theta = (lastTheta + (currLeft - currRight)*inchesperdeg/sTotal)*180/pi; //converts radians to degrees
+    position.theta = (lastTheta + (currLeft - currRight)*inchesperdeg/sTotal); //converts radians to degrees
     double changeTheta = position.theta - prevTheta;
     double sumofChange = changeLeft + changeRight;
     if (changeTheta == 0) { //if changeTheta = 0 -> robot is forward or back purely
@@ -60,9 +57,10 @@ void odom(void * ignore) {
     prevTheta = position.theta; //setting prev variables
 
     //printing to brain screen
-    pros::screen::print(TEXT_LARGE, 1, "X-coordinate: ", position.x);
-    pros::screen::print(TEXT_LARGE, 2, "Y-coordinate: ", position.y);
-    pros::screen::print(TEXT_LARGE, 3, "Theta: ", position.theta);
+    pros::screen::print(TEXT_LARGE, 1, "X-coordinate: %f", position.x);
+    pros::screen::print(TEXT_LARGE, 3, "Y-coordinate: %f", position.y);
+    pros::screen::print(TEXT_LARGE, 5, "Theta: %f", position.theta*180/pi);
+    std::cout << position.x << " " << position.y << " " << position.theta << std::endl;
 
     pros::Task::delay(5); //wait 5ms before running again
   }

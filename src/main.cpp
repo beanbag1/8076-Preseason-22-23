@@ -7,46 +7,6 @@
 using namespace okapi;
 using namespace std;
 
-void resetEncoders() {
-	Motor(17).tarePosition(); //base rf
-	Motor(-16).tarePosition(); //base lf
-	Motor(19).tarePosition(); //base rb
-	Motor(-20).tarePosition(); //base lb
-	Motor(1).tarePosition(); //branch
-	Motor(2).tarePosition(); //bl
-	Motor(-3).tarePosition()	; //fl
-	Motor(-4).tarePosition(); //intake
-}
-
-Controller masterController;
-Controller partnerController(ControllerId::partner);
-ControllerButton brlow(ControllerId::partner, ControllerDigital::B);
-ControllerButton brmid(ControllerId::partner, ControllerDigital::A);
-ControllerButton brup(ControllerId::partner, ControllerDigital::X);
-ControllerButton fpbut(ControllerId::master, ControllerDigital::L1);
-ControllerButton bpbut(ControllerId::master, ControllerDigital::R1);
-ControllerButton brpbut(ControllerId::partner, ControllerDigital::left);
-ControllerButton brpbut1(ControllerId::partner, ControllerDigital::right);
-ControllerButton brpbut2(ControllerId::partner, ControllerDigital::up);
-ControllerButton brpbut3(ControllerId::partner, ControllerDigital::down);
-ControllerButton tiltbut(ControllerId::master, ControllerDigital::R2);
-MotorGroup bleft({-16, -20});
-MotorGroup bright({17, 19});
-MotorGroup drive({17, -16, 19, -20});
-Motor branch(1);
-Motor bl(2);
-Motor fl(-3);
-Motor intake(-4);
-auto trackerL = ADIEncoder('C', 'D', true);
-auto trackerR = ADIEncoder('A', 'B', true);
-pros::ADIDigitalOut frontpiston ('E');
-pros::ADIDigitalOut backpiston ('F');
-pros::ADIDigitalOut branchpiston ('G');
-pros::ADIDigitalOut tiltpiston ('H');
-// pros::Gps GPS(11, -0.00635, 0.127);
-pros::Vision visionfront(5, pros::E_VISION_ZERO_CENTER);
-pros::Vision visionback(6, pros::E_VISION_ZERO_CENTER);
-
 //global control variables
 //GPS
 double xerror;
@@ -68,13 +28,34 @@ double brstatus;
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	drive.setBrakeMode(AbstractMotor::brakeMode::brake);
-	bleft.setBrakeMode(AbstractMotor::brakeMode::brake);
-	bright.setBrakeMode(AbstractMotor::brakeMode::brake);
-	branch.setBrakeMode(AbstractMotor::brakeMode::hold);
-	intake.setBrakeMode(AbstractMotor::brakeMode::coast);
-	fl.setBrakeMode(AbstractMotor::brakeMode::hold);
-	bl.setBrakeMode(AbstractMotor::brakeMode::hold);
+	Controller masterController;
+	Controller partnerController(ControllerId::partner);
+	ControllerButton brlow(ControllerId::partner, ControllerDigital::B);
+	ControllerButton brmid(ControllerId::partner, ControllerDigital::A);
+	ControllerButton brup(ControllerId::partner, ControllerDigital::X);
+	ControllerButton fpbut(ControllerId::master, ControllerDigital::L1);
+	ControllerButton bpbut(ControllerId::master, ControllerDigital::R1);
+	ControllerButton brpbut(ControllerId::partner, ControllerDigital::left);
+	ControllerButton brpbut1(ControllerId::partner, ControllerDigital::right);
+	ControllerButton brpbut2(ControllerId::partner, ControllerDigital::up);
+	ControllerButton brpbut3(ControllerId::partner, ControllerDigital::down);
+	ControllerButton tiltbut(ControllerId::master, ControllerDigital::R2);
+	MotorGroup bleft({-16, -20});
+	MotorGroup bright({17, 19});
+	MotorGroup drive({17, -16, 19, -20});
+	Motor branch(1);
+	Motor bl(2);
+	Motor fl(-3);
+	Motor intake(-4);
+	auto trackerL = ADIEncoder('C', 'D', true);
+	auto trackerR = ADIEncoder('A', 'B', true);
+	pros::ADIDigitalOut frontpiston ('E');
+	pros::ADIDigitalOut backpiston ('F');
+	pros::ADIDigitalOut branchpiston ('G');
+	pros::ADIDigitalOut tiltpiston ('H');
+	// pros::Gps GPS(11, -0.00635, 0.127);
+	pros::Vision visionfront(5, pros::E_VISION_ZERO_CENTER);
+	pros::Vision visionback(6, pros::E_VISION_ZERO_CENTER);
 	//reset encoders
 	trackerR.reset();
 	trackerL.reset();

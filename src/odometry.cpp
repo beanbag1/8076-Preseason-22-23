@@ -4,6 +4,7 @@
 #include "api.h"
 #include "okapi/api.hpp"
 #include "pros/api_legacy.h"
+#include "odometry.hpp"
 #include <iostream>
 using namespace okapi;
 using namespace std;
@@ -19,7 +20,7 @@ MotorGroup drive({17, -16, 19, -20});
 #define sL 7.75
 #define sR 7.75
 #define sTotal 15.5
-#define inchesperdeg (2.75*pi/360) 
+#define inchesperdeg (2.75*pi/360)
 
 //define CHANGING values
 double lastTheta = 0; //starting orientation

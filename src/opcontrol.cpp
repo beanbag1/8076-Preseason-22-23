@@ -25,6 +25,10 @@ void opcontrol() {
   drive.setBrakeMode(AbstractMotor::brakeMode::brake);
 	bleft.setBrakeMode(AbstractMotor::brakeMode::brake);
 	bright.setBrakeMode(AbstractMotor::brakeMode::brake);
+	branch.setBrakeMode(AbstractMotor::brakeMode::hold);
+	intake.setBrakeMode(AbstractMotor::brakeMode::coast);
+	fl.setBrakeMode(AbstractMotor::brakeMode::hold);
+	bl.setBrakeMode(AbstractMotor::brakeMode::hold);
 
   std::shared_ptr<ChassisController> driveController =
   ChassisControllerBuilder()

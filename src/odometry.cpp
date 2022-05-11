@@ -61,11 +61,12 @@ void odom(void * ignore) {
     prevRight = currRight;
     prevTheta = position.theta; //setting prev variables
 
-    //printing to brain screen
+    //print to brain screen
     pros::screen::print(TEXT_LARGE, 1, "X-coordinate: %f", position.x);
     pros::screen::print(TEXT_LARGE, 3, "Y-coordinate: %f", position.y);
     pros::screen::print(TEXT_LARGE, 5, "Theta: %f", position.theta*180/pi);
-    std::cout << position.x << " " << position.y << " " << position.theta << std::endl;
+    //print to console
+    //std::cout << position.x << " " << position.y << " " << position.theta << std::endl;
 
     pros::Task::delay(5); //wait 5ms before running again
   }

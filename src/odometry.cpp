@@ -19,7 +19,7 @@ MotorGroup drive({17, -16, 19, -20});
 #define sL 7.75
 #define sR 7.75
 #define sTotal 15.5
-#define inchesperdeg (2.75/360)
+#define inchesperdeg (2.75*pi/360) 
 
 //define CHANGING values
 double lastTheta = 0; //starting orientation

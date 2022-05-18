@@ -9,38 +9,22 @@ using namespace std;
 
 void opcontrol() {
   Controller masterController;
-  ControllerButton brlow(ControllerId::partner, ControllerDigital::B);
-  ControllerButton brmid(ControllerId::partner, ControllerDigital::A);
-  ControllerButton brup(ControllerId::partner, ControllerDigital::X);
-  ControllerButton fpbut(ControllerId::master, ControllerDigital::L1);
-  ControllerButton bpbut(ControllerId::master, ControllerDigital::R1);
-  ControllerButton brpbut(ControllerId::partner, ControllerDigital::left);
-  ControllerButton brpbut1(ControllerId::partner, ControllerDigital::right);
-  ControllerButton brpbut2(ControllerId::partner, ControllerDigital::up);
-  ControllerButton brpbut3(ControllerId::partner, ControllerDigital::down);
-  ControllerButton tiltbut(ControllerId::master, ControllerDigital::R2);
   MotorGroup bleft({-16, -20});
   MotorGroup bright({17, 19});
-  MotorGroup drive({17, -16, 19, -20});
-  drive.setBrakeMode(AbstractMotor::brakeMode::brake);
-	bleft.setBrakeMode(AbstractMotor::brakeMode::brake);
-	bright.setBrakeMode(AbstractMotor::brakeMode::brake);
-	branch.setBrakeMode(AbstractMotor::brakeMode::hold);
-	intake.setBrakeMode(AbstractMotor::brakeMode::coast);
-	fl.setBrakeMode(AbstractMotor::brakeMode::hold);
-	bl.setBrakeMode(AbstractMotor::brakeMode::hold);
-
-  std::shared_ptr<ChassisController> driveController =
-  ChassisControllerBuilder()
-  .withMotors(bleft, bright)
-  .withDimensions(AbstractMotor::gearset::green, {{4_in, 12_in}, imev5GreenTPR})
-  .build();
+  bleft.setBrakeMode(AbstractMotor::brakeMode::coast);
+  bright.setBrakeMode(AbstractMotor::brakeMode::coast);
 
   pros::Task Odometry(odom);
 
   while(true){
 		//chassis
-		driveController -> getModel() -> arcade(masterController.getAnalog(ControllerAnalog::rightY), masterController.getAnalog(ControllerAnalog::leftX));
-    pros::delay(5);
+  double throttle = masterController.getAnalog(ControllerAnalog::rightY);
+  double yaw = masterController.getAnalog(ControllerAnalog::leftX);
+  double strafe = masterController.getAnalog(ControllerAnalog::rightX);
+  double left = throttle + yaw;
+  double right = throttle - yaw;
+  bleft.moveVoltage(left*12000);
+  bright.moveVoltage(right*12000);
+  pros::delay(5);
   }
 }

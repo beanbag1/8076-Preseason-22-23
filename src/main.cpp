@@ -7,20 +7,6 @@
 using namespace okapi;
 using namespace std;
 
-//global control variables
-//GPS
-double xerror;
-double yerror;
-double heading1;
-//pistons
-bool fpbin;
-bool bpbin;
-bool brpbin;
-bool tiltbin;
-bool busy;
-//status controller
-double brstatus;
-
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -28,48 +14,7 @@ double brstatus;
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	Controller masterController;
-	Controller partnerController(ControllerId::partner);
-	ControllerButton brlow(ControllerId::partner, ControllerDigital::B);
-	ControllerButton brmid(ControllerId::partner, ControllerDigital::A);
-	ControllerButton brup(ControllerId::partner, ControllerDigital::X);
-	ControllerButton fpbut(ControllerId::master, ControllerDigital::L1);
-	ControllerButton bpbut(ControllerId::master, ControllerDigital::R1);
-	ControllerButton brpbut(ControllerId::partner, ControllerDigital::left);
-	ControllerButton brpbut1(ControllerId::partner, ControllerDigital::right);
-	ControllerButton brpbut2(ControllerId::partner, ControllerDigital::up);
-	ControllerButton brpbut3(ControllerId::partner, ControllerDigital::down);
-	ControllerButton tiltbut(ControllerId::master, ControllerDigital::R2);
-	MotorGroup bleft({-16, -20});
-	MotorGroup bright({17, 19});
-	MotorGroup drive({17, -16, 19, -20});
-	Motor branch(1);
-	Motor bl(2);
-	Motor fl(-3);
-	Motor intake(-4);
-	auto trackerL = ADIEncoder('C', 'D', true);
-	auto trackerR = ADIEncoder('A', 'B', true);
-	pros::ADIDigitalOut frontpiston ('E');
-	pros::ADIDigitalOut backpiston ('F');
-	pros::ADIDigitalOut branchpiston ('G');
-	pros::ADIDigitalOut tiltpiston ('H');
-	// pros::Gps GPS(11, -0.00635, 0.127);
-	pros::Vision visionfront(5, pros::E_VISION_ZERO_CENTER);
-	pros::Vision visionback(6, pros::E_VISION_ZERO_CENTER);
-	drive.setBrakeMode(AbstractMotor::brakeMode::brake);
-	bleft.setBrakeMode(AbstractMotor::brakeMode::brake);
-	bright.setBrakeMode(AbstractMotor::brakeMode::brake);
-	branch.setBrakeMode(AbstractMotor::brakeMode::hold);
-	intake.setBrakeMode(AbstractMotor::brakeMode::coast);
-	fl.setBrakeMode(AbstractMotor::brakeMode::hold);
-	bl.setBrakeMode(AbstractMotor::brakeMode::hold);
-	//reset encoders
-	trackerR.reset();
-	trackerL.reset();
-	//reset lifts
-	fl.tarePosition();
-	bl.tarePosition();
-	branch.tarePosition();
+	pros::lcd::initialize();
 }
 
 /**
@@ -88,16 +33,44 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
 
-/**
- * Runs the user autonomous code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the autonomous
- * mode. Alternatively, this function may be called in initialize or opcontrol
- * for non-competition testing purposes.
- *
- * If the robot is disabled or communications is lost, the autonomous task
- * will be stopped. Re-enabling the robot will restart the task, not re-start it
- * from where it left off.
- */
+bool red = true;
+int autonnum = 1;
+
+void leftbtn() {
+	autonnum--;
+	if (autonnum < 1) autonnum = 4;
+}
+
+void centrebtn() {
+	bool alreadychanged = false;
+	if (red == true) {
+		red = false;
+		alreadychanged = true;
+	}
+	else if (red == false && alreadychanged == false) {
+		red = true;
+		alreadychanged = true;
+	}
+}
+
+void rightbtn() {
+	autonnum++;
+	if (autonnum > 4) autonnum = 1;
+}
+
+void competition_initialize() {
+	while (true) {
+		pros::lcd::register_btn0_cb(leftbtn);
+		pros::lcd::register_btn1_cb(centrebtn);
+		pros::lcd::register_btn2_cb(rightbtn);
+
+    if(red == true) {
+			pros::lcd::set_text(0, "Red.");
+		} else if (red == false) {
+			pros::lcd::set_text(0, "Blue.");
+		}
+		pros::lcd::print(1, "Auton selected: %d", autonnum);
+		pros::delay(20);
+  }
+}

@@ -41,6 +41,17 @@
  */
 //#include "okapi/api.hpp"
 //#include "pros/api_legacy.h"
+#include "api.h"
+#include "okapi/api.hpp"
+#include "pros/api_legacy.h"
+#include "okapi/pathfinder/include/pathfinder.h"
+#include "odometry.hpp"
+#include "auton.hpp"
+#include "trajectory.hpp"
+#include <iostream>
+#include <algorithm>
+using namespace okapi;
+using namespace std;
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do

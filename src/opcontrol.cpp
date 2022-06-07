@@ -1,30 +1,22 @@
 #include "main.h"
-#include "api.h"
-#include "okapi/api.hpp"
-#include "pros/api_legacy.h"
-#include "odometry.hpp"
-#include <iostream>
-using namespace okapi;
-using namespace std;
 
 void opcontrol() {
   Controller masterController;
-  MotorGroup bleft({-16, -20});
-  MotorGroup bright({17, 19});
-  bleft.setBrakeMode(AbstractMotor::brakeMode::coast);
-  bright.setBrakeMode(AbstractMotor::brakeMode::coast);
-
-  pros::Task Odometry(odom);
-
+  Motor leftF (-1);
+  Motor leftB (-2);
+  Motor rightF (9);
+  Motor rightB (10);
+  MotorGroup base ({-1, -2, 9, 10});
+  base.setBrakeMode(AbstractMotor::brakeMode::coast);
   while(true){
 		//chassis
   double throttle = masterController.getAnalog(ControllerAnalog::rightY);
   double yaw = masterController.getAnalog(ControllerAnalog::leftX);
   double strafe = masterController.getAnalog(ControllerAnalog::rightX);
-  double left = throttle + yaw;
-  double right = throttle - yaw;
-  bleft.moveVoltage(left*12000);
-  bright.moveVoltage(right*12000);
+  leftF.moveVelocity((throttle + yaw + strafe)*200);
+  leftB.moveVelocity((throttle + yaw - strafe)*200);
+  rightF.moveVelocity((throttle - yaw - strafe)*200);
+  rightB.moveVelocity((throttle - yaw + strafe)*200);
   pros::delay(5);
   }
 }

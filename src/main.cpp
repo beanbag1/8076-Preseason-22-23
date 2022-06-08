@@ -1,11 +1,4 @@
 #include "main.h"
-#include "api.h"
-#include "okapi/api.hpp"
-#include "pros/api_legacy.h"
-#include "odometry.hpp"
-#include <iostream>
-using namespace okapi;
-using namespace std;
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.

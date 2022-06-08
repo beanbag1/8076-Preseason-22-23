@@ -1,8 +1,13 @@
 #include "main.h"
 
 void generate() {
+//inchespersec etc.
+#define maxVel (280/60)*(4*pi)
+#define maxAccel 1
+#define maxJerk 1
+
 #define ptlength 3
-Waypoint points[ptlength];
+Waypoint *points = (Waypoint*)malloc(sizeof(Waypoint) * ptlength);;
 
 //these points SHOULD run
 Waypoint p1 = {-4, -1, d2r(45)};
@@ -14,30 +19,29 @@ points[2] = p3;
 
 TrajectoryCandidate candidate;
 //adjust kinematic constraints
-pathfinder_prepare(points, ptlength, FIT_HERMITE_CUBIC, PATHFINDER_SAMPLES_HIGH, 0.001, 15.0, 10.0, 60.0, &candidate);
+pathfinder_prepare(points, ptlength, FIT_HERMITE_CUBIC, PATHFINDER_SAMPLES_HIGH, 0.005, maxVel, maxAccel, maxJerk, &candidate);
+free(points);
+
 int length = candidate.length;
-
 Segment *trajectory = (Segment*)malloc(length * sizeof(Segment));
-double wheelbasewidth = 0.6; //change
-pathfinder_modify_tank(trajectory, length, trajectory, trajectory, wheelbasewidth);
 
-int result = pathfinder_generate(&candidate, trajectory);
-if (result < 0) {
-  printf("Trajectory could not be generated. \n");
-}
+pathfinder_generate(&candidate, trajectory);
+
+double wheelbasewidth = 0.6; //change to inches something
+Segment *lefttrajectory = (Segment*)malloc(length * sizeof(Segment));
+Segment *righttrajectory = (Segment*)malloc(length * sizeof(Segment));
+pathfinder_modify_tank(trajectory, length, lefttrajectory, righttrajectory, wheelbasewidth);
 
 int i;
 for (i = 0; i < length; i++) {
-  Segment s = trajectory[i];
-  printf("Time Step: %f\n", s.dt);
-  printf("Coords: (%f, %f)\n", s.x, s.y);
-  printf("Position (Distance): %f\n", s.position);
-  printf("Velocity: %f\n", s.velocity);
-  printf("Acceleration: %f\n", s.acceleration);
-  printf("Jerk (Acceleration per Second): %f\n", s.jerk);
-  printf("Heading (radians): %f\n", s.heading);
+  Segment leftS = lefttrajectory[i];
+  Segment rightS = righttrajectory[i];
+  ramseteFollow(leftS.x, leftS.y, leftS.heading, leftS.velocity, rightS.velocity);
+  pros::delay(5); //the number here should be equal to your looptime declared
 }
 
 free(trajectory);
+free(lefttrajectory);
+free(righttrajectory);
 
 }

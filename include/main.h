@@ -48,6 +48,8 @@
 #include "odometry.hpp"
 #include "auton.hpp"
 #include "trajectory.hpp"
+#include "ramsete.hpp"
+#include "flywheeltbh.hpp"
 #include <iostream>
 #include <algorithm>
 using namespace okapi;

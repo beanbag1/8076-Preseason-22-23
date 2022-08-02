@@ -50,6 +50,7 @@
 #include "trajectory.hpp"
 #include "ramsete.hpp"
 #include "flywheeltbh.hpp"
+#include "basecontrol.hpp"
 #include <iostream>
 #include <algorithm>
 using namespace okapi;

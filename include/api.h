@@ -57,7 +57,7 @@
 #include "pros/llemu.h"
 #include "pros/misc.h"
 #include "pros/motors.h"
-#include "pros/optical.h"
+//#include "pros/optical.h"
 #include "pros/rtos.h"
 #include "pros/rotation.h"
 #include "pros/screen.h"
@@ -71,7 +71,7 @@
 #include "pros/llemu.hpp"
 #include "pros/misc.hpp"
 #include "pros/motors.hpp"
-#include "pros/optical.hpp"
+//#include "pros/optical.hpp"
 #include "pros/rotation.hpp"
 #include "pros/rtos.hpp"
 #include "pros/screen.hpp"
@@ -80,3 +80,5 @@
 #endif
 
 #endif  // _PROS_API_H_
+
+//for some reason my optical.h and .hpp files have recursive inclusion error so they are commented
